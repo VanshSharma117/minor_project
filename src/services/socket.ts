@@ -2,10 +2,11 @@ import { io, Socket } from 'socket.io-client';
 import { Message } from '../types';
 
 let socket: Socket | null = null;
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || window.location.origin;
 
 export function getSocket(): Socket {
   if (!socket) {
-    socket = io(window.location.origin, {
+    socket = io(SOCKET_URL, {
       transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionAttempts: 15,

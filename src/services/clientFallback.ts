@@ -384,9 +384,24 @@ export function handleClientMockRequest(endpoint: string, options: RequestInit =
     };
   }
 
+  // Admin: Students
+  if (endpoint.includes('/admin/students')) {
+    return [
+      { user: initialUsers[0], profile: initialStudentProfile }
+    ];
+  }
+
+  // Admin: Faculty
+  if (endpoint.includes('/admin/faculty')) {
+    return initialFacultyList;
+  }
+
   // Admin: Users
   if (endpoint.includes('/admin/users')) {
-    return initialUsers;
+    return [
+      { user: initialUsers[0], profile: initialStudentProfile },
+      ...initialFacultyList
+    ];
   }
 
   // Default fallback object

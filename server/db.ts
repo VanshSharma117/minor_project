@@ -1,3 +1,17 @@
+/**
+ * =======================================================================
+ * EduPilot AI Campus Data Store Architecture Notice:
+ * -----------------------------------------------------------------------
+ * Note: Data is currently stored in-memory for this deployment/demo version.
+ * - All registered users, profiles, tasks, messages, and requests are held in memory.
+ * - Data will reset to the campus seed state whenever the backend restarts.
+ * - This architecture is lightweight and optimal for college project evaluations,
+ *   demonstrations, and viva presentations without external database dependencies.
+ * - For production multi-instance environments, a persistent database such as
+ *   MongoDB or PostgreSQL can be integrated in future phases.
+ * =======================================================================
+ */
+
 import bcrypt from 'bcryptjs';
 import {
   User,

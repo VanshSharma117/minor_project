@@ -49,8 +49,8 @@ export const AllUsersPage: React.FC = () => {
   }, []);
 
   const allUsers = [
-    ...students.map(s => ({ ...s.user, profile: s.profile })),
-    ...faculty.map(f => ({ ...f.user, profile: f.profile }))
+    ...(Array.isArray(students) ? students : []).map(s => ({ ...s.user, profile: s.profile })),
+    ...(Array.isArray(faculty) ? faculty : []).map(f => ({ ...f.user, profile: f.profile }))
   ];
 
   const filtered = allUsers.filter(u => {

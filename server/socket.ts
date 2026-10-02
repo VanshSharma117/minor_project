@@ -6,10 +6,16 @@ import { Message } from './types.js';
 let io: SocketIOServer | null = null;
 
 export function initSocketServer(httpServer: HTTPServer): SocketIOServer {
+  const frontendUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, '') : null;
+  const allowedOrigins = frontendUrl
+    ? [frontendUrl, 'http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5173', 'http://127.0.0.1:5173']
+    : '*';
+
   io = new SocketIOServer(httpServer, {
     cors: {
-      origin: '*',
-      methods: ['GET', 'POST']
+      origin: allowedOrigins,
+      methods: ['GET', 'POST'],
+      credentials: true
     }
   });
 
