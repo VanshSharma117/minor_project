@@ -1,0 +1,6 @@
+{
+  "name": "EduPilot AI",
+  "description": "AI + Faculty Hybrid Mentoring System - Campus-only internal mentoring platform connecting Students, Faculty Mentors, and Administration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
