@@ -5,7 +5,8 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: '/edupilot-ai/,
+    // Relative base path ensures assets load properly on GitHub Pages regardless of repository name
+    base: './',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

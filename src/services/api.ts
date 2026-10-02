@@ -15,6 +15,7 @@ import {
   MatchScoreBreakdown,
   Department
 } from '../types';
+import { handleClientMockRequest } from './clientFallback';
 
 const TOKEN_KEY = 'edupilot_token';
 
@@ -41,19 +42,56 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     (headers as any)['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`/api${endpoint}`, {
-    ...options,
-    headers,
-  });
+  try {
+    const response = await fetch(`/api${endpoint}`, {
+      ...options,
+      headers,
+    });
 
-  const data = await response.json().catch(() => ({}));
+    const contentType = response.headers.get('content-type') || '';
 
-  if (!response.ok) {
-    const errorMsg = data.error || `HTTP error ${response.status}`;
-    throw new Error(errorMsg);
+    // If backend returned valid JSON, parse it
+    if (response.ok && contentType.includes('application/json')) {
+      const data = await response.json();
+      return data as T;
+    }
+
+    // If backend returned 400, 401, or 403 with an error message, respect that error
+    if (response.status === 400 || response.status === 401 || response.status === 403) {
+      const data = await response.json().catch(() => ({}));
+      if (data.error) {
+        throw new Error(data.error);
+      }
+    }
+
+    // If static hosting (like GitHub Pages) returns 404 HTML, gracefully use static client fallback
+    if (response.status === 404 || !contentType.includes('application/json')) {
+      return handleClientMockRequest(endpoint, options) as T;
+    }
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const errorMsg = data.error || `HTTP error ${response.status}`;
+      throw new Error(errorMsg);
+    }
+
+    return data as T;
+  } catch (err: any) {
+    // If it's a specific validation message, rethrow it to UI
+    if (
+      err.message &&
+      (err.message.includes('credentials') ||
+        err.message.includes('verification') ||
+        err.message.includes('password') ||
+        err.message.includes('college email') ||
+        err.message.includes('belong to'))
+    ) {
+      throw err;
+    }
+
+    // Otherwise, for offline/static deployment environments, use client fallback
+    return handleClientMockRequest(endpoint, options) as T;
   }
-
-  return data as T;
 }
 
 export const api = {

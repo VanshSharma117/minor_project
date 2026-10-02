@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>EduPilot AI</title>
+    <script>
+      // Single Page App redirect for GitHub Pages
+      // When a user refreshes or opens a subroute on GitHub Pages, redirect to Hash route
+      var path = window.location.pathname;
+      var repo = path.split('/')[1] || '';
+      var subpath = path.split('/').slice(2).join('/');
+      var target = '/' + repo + '/#/' + subpath + window.location.search + window.location.hash;
+      window.location.replace(target);
+    </script>
+  </head>
+  <body>
+    <p>Redirecting to EduPilot AI Portal...</p>
+  </body>
+</html>
